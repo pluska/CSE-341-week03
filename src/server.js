@@ -19,6 +19,12 @@ app.use((req, res, next) => {
 });
 
 
+// Handling Errors
+
+process.on('uncaughtException', (err, origin) => {
+    console.log(process.stderr.fd, `Uncaught Exception: ${err}\n` + `Exception origin: ${origin}`);
+});
+
 mongodb.initDb((err) => {
     if (err) {
         console.log(err);

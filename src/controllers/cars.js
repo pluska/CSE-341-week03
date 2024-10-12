@@ -3,29 +3,29 @@ const { ObjectId } = require('mongodb');
 
 const getAllCars = async (req, res) => {
     //#swagger.tags=['cars']
-    const result = await mongodb.getDatabase().collection('cars').find();
-    if (result) {
-        result.toArray().then((cars) => {
-            res.status(200).json(cars);
-        });
-    }
-    else {
-        res.status(500).json({ error: 'An error occurred while retrieving cars.' });
-    }
+    await mongodb.getDatabase().collection('cars').find().toArray((err, list) => {
+        if (err) {
+            res.status(400).json({ message: err });
+        }
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(list);
+    });
 };
 
 const getCarById = async (req, res) => {
     //#swagger.tags=['cars']
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json({ message: 'Specified id is not valid' });
+        return;
+    }
     const id = new ObjectId(req.params.id);
-    const result = await mongodb.getDatabase().collection('cars').find({ _id: id });
-    if (result) {
-        result.toArray().then((cars) => {
-            res.status(200).json(cars[0]);
-        });
-    }
-    else {
-        res.status(404).json({ error: 'Car not found.' });
-    }
+    await mongodb.getDatabase().collection('cars').find({ _id: id }).toArray((err, result) => {
+        if (err) {
+            res.status(400).json({ message: err });
+        }
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(result[0]);
+    });
 };
 
 const createCar = async (req, res) => {
@@ -47,6 +47,10 @@ const createCar = async (req, res) => {
 
 const updateCar = async (req, res) => {
     //#swagger.tags=['cars']
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json({ message: 'Specified id is not valid' });
+        return;
+    }
     const id = new ObjectId(req.params.id);
     const updateCar = {
         model: req.body.model,
@@ -69,6 +73,10 @@ const updateCar = async (req, res) => {
 
 const deleteCar = async (req, res) => {
     //#swagger.tags=['cars']
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json({ message: 'Specified id is not valid' });
+        return;
+    }
     const id = req.params.id;
     const result = await mongodb.getDatabase().collection('cars').deleteOne({ _id: new ObjectId(id) });
     if (result.deletedCount === 0) {
