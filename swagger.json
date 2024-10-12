@@ -1,0 +1,186 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "CSE-341 Project 2",
+    "description": "Second project for wk03 and wk04",
+    "version": "1.0.0"
+  },
+  "host": "https://cse-341-huiw.onrender.com",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Hello World"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api-docs": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/cars/": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cars"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "example": "any"
+                },
+                "make": {
+                  "example": "any"
+                },
+                "year": {
+                  "example": "any"
+                },
+                "price": {
+                  "example": "any"
+                },
+                "color": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/cars/{id}": {
+      "get": {
+        "tags": [
+          "cars"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "cars"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "example": "any"
+                },
+                "make": {
+                  "example": "any"
+                },
+                "year": {
+                  "example": "any"
+                },
+                "price": {
+                  "example": "any"
+                },
+                "color": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cars"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}

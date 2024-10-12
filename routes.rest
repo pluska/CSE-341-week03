@@ -1,0 +1,35 @@
+//LOCALHOST
+### Get All Cars
+GET http://localhost:3000/cars
+
+### Get Car By ID
+GET http://localhost:3000/cars/670ae75fd87ee1b0b699d093
+
+
+### Create Car
+POST http://localhost:3000/cars
+Content-Type: application/json
+
+{
+    "model": "911",
+    "make": "Porsche",
+    "year": 2023,
+    "price": 150000,
+    "color": "Black"
+}
+
+### Update Car
+PUT http://localhost:3000/cars/670ae75fd87ee1b0b699d093
+Content-Type: application/json
+
+{
+    "model": "Rush",
+    "make": "Toyota",
+    "year": 2022,
+    "price": 25000,
+    "color": "White"
+}
+
+### Delete Car
+DELETE http://localhost:3000/car/
+
