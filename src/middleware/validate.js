@@ -4,8 +4,8 @@ const saveCar = (req, res, next) => {
     const validationRules = {
         model: 'required|string',
         make: 'required|string',
-        year: 'required|number',
-        price: 'required|number',
+        year: 'required|integer',
+        price: 'required|integer',
         color: 'required|string',
     }
 

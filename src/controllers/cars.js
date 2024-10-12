@@ -3,13 +3,13 @@ const { ObjectId } = require('mongodb');
 
 const getAllCars = async (req, res) => {
     //#swagger.tags=['cars']
-    await mongodb.getDatabase().collection('cars').find().toArray((err, list) => {
-        if (err) {
-            res.status(400).json({ message: err });
-        }
+    try {
+        const list = await mongodb.getDatabase().collection('cars').find().toArray();
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(list);
-    });
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
 };
 
 const getCarById = async (req, res) => {
@@ -19,17 +19,22 @@ const getCarById = async (req, res) => {
         return;
     }
     const id = new ObjectId(req.params.id);
-    await mongodb.getDatabase().collection('cars').find({ _id: id }).toArray((err, result) => {
-        if (err) {
-            res.status(400).json({ message: err });
+    try {
+        const result = await mongodb.getDatabase().collection('cars').findOne({ _id: id });
+        if (!result) {
+            res.status(404).json({ message: 'Car not found' });
+            return;
         }
         res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(result[0]);
-    });
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
 };
 
 const createCar = async (req, res) => {
     //#swagger.tags=['cars']
+    console.log(req.body);
     const newCar = {
         model: req.body.model,
         make: req.body.make,
