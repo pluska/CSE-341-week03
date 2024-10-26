@@ -1,25 +1,60 @@
 const express = require('express');
-const app = express();
-
 const mongodb = require('./data/database');
 const bodyParser = require('body-parser');
-
 const PORT = process.env.PORT || 3000;
+const passport = require('passport');
+const session = require('express-session');
+const GithubStrategy = require('passport-github2').Strategy;
+const cors = require('cors');
 
-app.use(bodyParser.json());
+const app = express();
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Z-Key');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    next();
-});
 
-app.use('/', require('./routes'));
+app
+    .use(bodyParser.json())
+    .use(session({
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: true
+    }))
+    .use(passport.initialize())
+    .use(passport.session())
+    .use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader(
+            'Access-Control-Allow-Headers',
+            'Origin, X-Requested-With, Content-Type, Accept, Z-Key, Authorization');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        next();
+    })
+    .use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader(
+            'Access-Control-Allow-Headers',
+            'Origin, X-Requested-With, Content-Type, Accept, Z-Key');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        next();
+    })
+    .use(cors({ methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] }))
+    .use(cors({ origin: '*' }))
+    .use('/', require('./routes'))
 
-// Handling Errors
+    passport.use(new GithubStrategy({
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: process.env.GITHUB_CALLBACK_URL
+    }, (accessToken, refreshToken, profile, done) => {
+        return done(null, profile);
+    }))
+
+    passport.serializeUser((user, done) => {
+        done(null, user);
+    })
+
+    passport.deserializeUser((user, done) => {
+        done(null, user);
+    })
+
 
 process.on('uncaughtException', (err, origin) => {
     console.error(`Uncaught Exception: ${err}\nException origin: ${origin}`);
